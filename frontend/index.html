@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RoomBook</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>RoomBook</h1>
+    <p>Book a study room in the library, in 30-minute steps between 08:00 and 22:00.</p>
+  </header>
+
+  <main>
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+
+    <section class="day">
+      <label for="day">Day</label>
+      <input type="date" id="day">
+    </section>
+
+    <section id="rooms" class="rooms" aria-label="Rooms and their bookings for the chosen day"></section>
+
+    <section class="book">
+      <h2>Book a room</h2>
+      <form id="book-form" novalidate>
+        <label for="room">Room</label>
+        <select id="room"></select>
+
+        <label for="start">From</label>
+        <select id="start"></select>
+
+        <label for="end">To</label>
+        <select id="end"></select>
+
+        <label for="name">Your name</label>
+        <input id="name" type="text" maxlength="60" autocomplete="name">
+
+        <button type="submit">Book</button>
+      </form>
+      <p id="form-message" class="form-message" role="alert"></p>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

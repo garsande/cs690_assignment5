@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "command(python -m pytest)",
+      "command(python3 -m pytest)",
+      "command(pytest)",
+      "command(python tools/check_layers.py)",
+      "command(python3 tools/check_layers.py)"
+    ],
+    "deny": [
+      "write_file(frontend/)",
+      "command(git push)",
+      "command(rm -rf)"
+    ]
+  }
+}
