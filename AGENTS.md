@@ -18,4 +18,16 @@ another team. The backend in `app/` is built to match `docs/spec.md`.
 
 ## Backend rules
 
-(Part 1: write this section.)
+
+## Backend rules
+
+- Keep HTTP handling in `app/routes.py`; it should translate requests and responses, not make booking decisions.
+- Put all section 5 booking rules in `app/service.py`, separate from HTTP and database details.
+- Keep SQL exclusively in `app/repository.py`; use `app/models.py` for request data shapes.
+- Define `create_app(db_path: str = "roombook.db")` in `app/main.py` and follow section 3 for initialization, static files, and database isolation.
+- Format every API failure exactly as R9 requires: only `error` and `message`, with the specified status and code.
+- Use Python's built-in `sqlite3` only: no ORM or additional dependencies.
+- Open and close a separate SQLite connection per request or repository operation; never share one connection across FastAPI threads.
+- After each task, run `python tools/check_layers.py` and `python -m pytest` and report both outcomes.
+- Extra safeguard: never hide a failing test or checker result; report the failure and stop before unrelated changes.
+
