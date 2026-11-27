@@ -1,0 +1,6 @@
+
+Read docs/spec.md and frontend/app.js. Do not write code and do not edit files.
+
+List every question you would have to guess the answer to in order to build this backend: anything unclear, missing, or in conflict between the spec and the page.
+
+Number them Q1, Q2, and so on, and for each one name the rule it touches.

@@ -148,6 +148,7 @@ sees data saved earlier in the same file.
 | 404 | `booking_not_found` | R8 |
 | 409 | `overlap` | R7 |
 
+
 ## 7. Decisions
 
 **Already decided by the product owner.**
@@ -162,11 +163,65 @@ request they accept, accept a request they reject, or change a route, field, sta
 or error code. If you think a rule is missing, write it under "Proposed, not built" with
 your reason; it is not built in this assignment.
 
-- D1.
+- D1. Strict integer validation (Q2, R3).
+  The room_id field in a POST request must be a JSON integer.
+  Boolean values, numeric strings, and floating-point values
+  are not accepted as integers. Invalid types return
+  422 invalid_request.
+
+- D2. Integer range handling (Q4, R2, R6, R8).
+  Valid integer identifiers outside SQLite's supported integer
+  range are treated as nonexistent identifiers. Return
+  404 room_not_found or 404 booking_not_found, as applicable,
+  following the existing validation order. Such identifiers
+  must not cause a database overflow exception.
+
+- D3. Name processing (Q9, Q10, R4).
+  Use Python's str.strip() to remove leading and trailing
+  whitespace and len() to count Unicode code points.
+  Preserve the original capitalization and internal whitespace.
+  Apply the existing 1-to-40-character requirement after trimming.
+
+- D4. GET validation order (Q11, R2, R9).
+  For GET /api/bookings, validate the date parameter before
+  validating room_id. If the date is invalid, return
+  422 invalid_request before checking the room identifier.
+
+- D5. Booking identifier reuse (Q14, R8).
+  Booking identifiers must not be reused after cancellation
+  within the same database. This prevents stale cancellation
+  requests from deleting a different booking assigned the
+  same identifier.
+
+- D6. Concurrent booking requests (Q15, R7, R9).
+  Perform the overlap check and booking insertion within
+  one atomic database transaction, with appropriate write
+  serialization, so concurrent requests cannot create
+  overlapping bookings.
+
+- D7. Frontend file location (Q16, R10).
+  Resolve the frontend directory relative to the repository
+  location rather than the current working directory.
+  Serve the frontend files through the routes already
+  defined in section 3.
+
+- D8. Unsupported endpoints (Q12, R9).
+  Requests to API routes or HTTP methods not defined in
+  section 4 are handled by FastAPI's default behavior.
+  No additional application endpoints or error codes
+  are introduced. All defined API endpoints must continue
+  to follow R9.
 
 **Proposed, not built.**
 
-- (none yet)
+- Daily booking limit (Q1).
+  The frontend handles a daily_limit error indicating a maximum
+  of two bookings per person per day. However, Version 1 of the
+  specification does not define this rule or error code.
+
+  Implementing this behavior would introduce a new rejection
+  condition and change the existing API contract. Therefore,
+  it is deferred until a formal specification change is made.
 
 ## 8. Change log
 
