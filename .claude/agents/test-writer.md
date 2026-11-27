@@ -1,4 +1,3 @@
-
 ---
 name: test-writer
 description: Writes acceptance tests from the RoomBook specification. Use when creating new acceptance tests before backend implementation.

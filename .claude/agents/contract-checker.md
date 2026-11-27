@@ -1,4 +1,3 @@
-
 ---
 name: contract-checker
 description: Performs a read-only comparison of the frontend API contract, RoomBook specification, and backend routes. Use after API implementation or contract changes.

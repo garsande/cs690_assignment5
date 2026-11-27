@@ -18,9 +18,6 @@ another team. The backend in `app/` is built to match `docs/spec.md`.
 
 ## Backend rules
 
-
-## Backend rules
-
 - Keep HTTP handling in `app/routes.py`; it should translate requests and responses, not make booking decisions.
 - Put all section 5 booking rules in `app/service.py`, separate from HTTP and database details.
 - Keep SQL exclusively in `app/repository.py`; use `app/models.py` for request data shapes.

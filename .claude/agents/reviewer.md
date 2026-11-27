@@ -1,4 +1,3 @@
-
 ---
 name: reviewer
 description: Performs a read-only review of RoomBook backend code against the specification and architectural rules. Use after backend implementation tasks.
