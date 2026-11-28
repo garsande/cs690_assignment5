@@ -1,0 +1,1 @@
+Use the test-writer subagent to write acceptance tests for rules R1 to R10 of docs/spec.md, in tests/acceptance/. There is no backend yet, so do not run the code to find expected values. Report the tests by rule.

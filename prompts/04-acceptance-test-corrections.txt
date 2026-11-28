@@ -1,0 +1,39 @@
+Use the test-writer subagent to review and correct the existing acceptance tests in tests/acceptance/ based on the following human-reviewed findings.
+
+Read docs/spec.md, including decisions D1-D8, and AGENTS.md. Do not change the specification, backend, frontend, tests/conftest.py, dependencies, or permission settings.
+
+The acceptance tests have not been locked yet.
+
+F1 - R9 unchanged state:
+Review every error test and ensure rejected requests check the expected HTTP status, error code, exact error response structure, and unchanged booking state wherever applicable. Several tests in R2, R8, R9 and R10 currently omit the state comparison. Include relevant valid dates in snapshots.
+
+F2 - R9 failed request series:
+In test_r9_series_of_failed_requests_changes_nothing, assert the correct status and error code for every failed request. Verify that the booking state remains unchanged.
+
+F3 - R8 identifier assumptions:
+The specification does not require booking identifiers to be positive. Correct test_r8_zero_or_negative_id_is_booking_not_found so it does not assume that zero or negative identifiers can never be assigned. Ensure tests for unknown booking IDs use identifiers that are actually absent.
+
+F4 - R7 concurrency:
+Retain the D6 concurrency test. Improve worker exception handling and safeguards against indefinite waiting. Assert exactly one 201 response, seven 409 overlap responses with the complete R9 error structure, and exactly one persisted booking matching the successful response. Do not assume which request succeeds.
+
+F5 - R4 Unicode boundaries:
+Add tests using 40 and 41 supplementary Unicode characters, such as emoji, to distinguish Unicode code-point counting from UTF-16 code-unit counting under D3.
+
+F6 - R3 extra fields:
+Add a test verifying that a client-supplied id field is ignored. Use an existing booking ID in the extra field of a second valid, non-overlapping booking. Verify that the second booking receives a different backend-assigned ID and the first booking remains unchanged. Do not assume any particular ID numbering sequence.
+
+F7 - R10 restart overlap:
+Strengthen test_r10_restart_still_enforces_overlap to check the complete R9 error response and confirm that the original persisted booking remains unchanged.
+
+F8 - R9 test naming:
+Correct test names and comments that claim to exercise rules not actually violated by their inputs, particularly the tests claiming simultaneous violations of R3-R7 or R4-R7.
+
+Retain all valid existing test coverage and mandatory boundary cases. Do not introduce the daily booking limit or assumptions about unresolved specification ambiguities.
+
+Accept the interpretation that impossible calendar dates in POST requests return 422 invalid_request under R2 and R3.
+
+Derive all expected values from the specification. Do not implement any backend code.
+
+Report each finding F1-F8 separately, the files and tests changed, the reason for each correction, and the updated test counts by rule.
+
+Do not run pytest or the layer checker yet. Stop after writing and reporting the corrections so I can review every changed test before running the required checks.

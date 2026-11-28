@@ -1,0 +1,43 @@
+Review the specification clarification response generated
+by Claude Code for the CS690 Assignment 5 RoomBook project.
+
+Compare Claude's clarification questions against docs/spec.md,
+frontend/app.js, AGENTS.md and the Part 3 requirements in
+HANDOUT.md.
+
+For each clarification question:
+
+1. Identify the specification rule affected.
+2. Determine whether the question represents an ambiguity,
+   missing requirement, conflict or an already defined rule.
+3. Recommend whether to accept, reject or defer the proposed
+   clarification.
+4. Explain the reasoning behind the recommendation.
+5. Ensure that no new business requirements are introduced
+   into Version 1.
+
+Recommend clarification decisions that resolve important
+implementation ambiguities without changing the existing
+API contract, business rules or product owner decisions.
+
+Keep the daily booking limit deferred until Part 8.
+
+After I approve the selected decisions, help prepare the
+Section 7 clarification decisions and the evidence document:
+
+evidence/03-spec-clarification.md
+
+The evidence document should include the original Claude
+response, clarification questions, review decisions,
+reasoning, accepted decisions, deferred questions,
+verification results and remaining risks.
+
+Review the Git diff and local checker output that I provide
+to verify that the specification changes are appropriately
+scoped.
+
+Do not implement backend code, create acceptance tests,
+modify frontend files or commit changes.
+
+Prepare a ledger entry documenting the review activities,
+decisions, evidence, checks and remaining risks.

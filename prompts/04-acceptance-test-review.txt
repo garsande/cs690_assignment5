@@ -1,0 +1,60 @@
+##1
+Review the attached Claude Code response describing
+the initial acceptance test generation session.
+
+Claude's test-writer subagent generated 245 acceptance
+test cases covering specification rules R1-R10.
+
+Evaluate the reported test coverage against docs/spec.md,
+decisions D1-D8 and the Part 4 requirements in HANDOUT.md.
+
+Review the mandatory boundary cases and identify any
+missing coverage or unsupported assumptions.
+
+Evaluate Claude's questions concerning impossible
+calendar dates, excluded test cases and concurrent
+booking requests.
+
+Distinguish between results reported by Claude and
+results that have been independently verified.
+
+Identify any process deviations, including test execution
+before completion of the human review.
+
+Recommend the next steps before locking the acceptance
+tests and update the acceptance test audit accordingly.
+
+
+
+##2
+
+Review the attached Claude Code correction response
+addressing findings F1-F8 from the initial acceptance
+test review.
+
+Evaluate whether each reported correction resolves
+the corresponding review finding.
+
+Compare the original 245 test cases with the revised
+reported count of 250 test cases.
+
+Review the new shared error-helper design, including
+automatic reference-booking creation and booking-state
+snapshots.
+
+Evaluate whether the helper design could interfere with
+tests requiring an empty database or introduce unintended
+booking conflicts.
+
+Review the reported concurrency improvements, Unicode
+boundary tests, booking identifier handling and validation
+precedence corrections.
+
+Identify any remaining risks or decisions requiring
+human approval.
+
+Prepare an update for the acceptance test audit.
+
+Do not treat reported corrections as independently
+verified until the revised source files are inspected.
+
