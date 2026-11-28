@@ -633,3 +633,223 @@ risk:      The independent review establishes planning-level
            The original Claude plan is summarized in the
            evidence file. The supplied revised Claude
            response is preserved verbatim.
+
+## Entry 4: Part 6 — Task 1: Repository implementation
+
+
+artifact:  app/repository.py;
+           evidence/06-task1-repository.md
+
+tool:      Claude Code, 2.1.332, Opus 5.5,
+           2026-11-28, main agent
+
+prompts:   prompts/06-task1-repository.txt
+
+review:    Claude implemented Task 1 of docs/plan.md by
+           creating app/repository.py with 152 lines.
+
+           I reviewed the implementation and confirmed that all SQL
+           remains in the repository layer.
+
+           The implementation opens and closes a separate
+           SQLite connection for each repository operation.
+
+           Claude implemented the four-room initialization,
+           booking retrieval, room filtering, overlap
+           detection, booking insertion and cancellation.
+
+           AUTOINCREMENT prevents booking ID reuse under D5.
+
+           BEGIN IMMEDIATE ensures that overlap checking
+           and insertion occur in one transaction under D6.
+
+           Claude made two additional implementation choices:
+
+           - Double-quoted the SQL column "end" because
+             END is an SQLite keyword.
+           - Returned an empty list from list_bookings
+             for out-of-range room identifiers.
+
+           I accepted these choices because they do not
+           change the public API contract. The service must
+           still return the specified 404 error for unknown
+           or out-of-range room identifiers.
+
+           I also accepted the NOT NULL constraints,
+           transactional room initialization and guarded
+           rollback handling.
+
+           No blocking review findings were identified.
+           No correction prompt was required.
+
+           Claude stopped after Task 1 without implementing
+           Task 2, modifying tests or committing changes.
+
+checks:    Claude repository smoke checks:
+           All 22 checks passed, including initialization,
+           ordering, filtering, overlap detection, touching
+           bookings, deletion, ID nonreuse and integer
+           range handling.
+
+           Claude python tools/check_layers.py:
+           Exit code 1, with four expected L4 violations.
+           No L1, L2, L3 or L5 violations reported.
+
+           Claude python -m pytest tests/acceptance:
+           0 passed, 9 failed, 241 errors in 2.64s.
+
+           Claude python -m pytest:
+           0 passed, 9 failed, 241 errors.
+
+           Local git status --short:
+           Only app/repository.py and
+           prompts/06-task1-repository.txt listed.
+
+           git diff --no-index /dev/null app/repository.py:
+           Confirmed a new 152-line repository module.
+
+           git diff a5-tests-locked -- tests/acceptance/:
+           No output; locked tests unchanged.
+
+           git diff HEAD -- frontend/ docs/spec.md AGENTS.md:
+           No output; protected files unchanged.
+
+           Local python3 tools/check_layers.py:
+           Layer check FAILED:
+             L4: app/main.py is missing
+             L4: app/routes.py is missing
+             L4: app/service.py is missing
+             L4: app/models.py is missing
+
+           These four missing modules are expected at
+           this stage of the approved implementation plan.
+
+           Local python3 -m pytest tests/acceptance -q --tb=no:
+           0 passed, 9 failed, 241 errors in 2.20s.
+
+           All acceptance tests reported:
+           ModuleNotFoundError: No module named 'app.main'.
+
+           git diff --check:
+           No output for tracked changes.
+
+evidence:  app/repository.py;
+           docs/plan.md, Task 1;
+           evidence/06-task1-repository.md;
+           prompts/06-task1-repository.txt;
+           rules R1, R2, R6, R7, R8 and R10;
+           decisions D2, D5 and D6;
+           layer rules L1-L5;
+           a5-tests-locked (250 acceptance tests).
+
+risk:      Repository-level checks passed, but the complete
+           backend has not yet been implemented.
+
+           Task 2 must enforce room existence, input
+           validation, error precedence and the specified
+           API-level errors.
+
+           Task 3 must verify API integration, concurrent
+           booking protection, database persistence and
+           isolation through the locked acceptance tests.
+
+           The four L4 violations and 250 unsuccessful
+           acceptance tests are expected because the
+           remaining backend modules do not yet exist.
+
+           The daily booking limit remains intentionally
+           excluded until Part 8.
+
+## Entry 4A: Review
+
+artifact:  app/repository.py (reviewed);
+           evidence/06-task1-repository.md;
+           prompts/06-task1-review.txt
+
+tool:      ChatGPT, GPT-6.2,
+           2026-11-28, independent AI reviewer
+
+prompts:   prompts/06-task1-review.txt
+
+review:    Reviewed Claude's
+           repository implementation against the approved
+           Task 1 plan, specification and backend rules.
+
+           The review confirmed that SQL is isolated in
+           the repository layer and that connections are
+           opened and closed separately for each operation.
+
+           Reviewed the database schema, room
+           initialization, parameterized SQL, booking
+           retrieval, integer range guards, transaction
+           handling and cancellation behavior.
+
+           The overlap condition correctly rejects
+           conflicting bookings while allowing bookings
+           that touch at their start or end times.
+
+           Accept Claude's two
+           additional implementation choices concerning
+           the quoted SQL column and out-of-range filters.
+
+           No blocking findings were identified.
+
+           I reviewed the findings and accepted the
+           repository implementation without requesting
+           further code changes.
+
+checks:    Independently inspected the uploaded
+           app/repository.py source file.
+
+           Executed repository-level checks using a
+           disposable SQLite database.
+
+           Concurrent booking experiment:
+           8 simultaneous identical booking requests.
+           1 successful insertion.
+           7 overlapping requests rejected.
+           Exactly 1 booking persisted.
+
+           Additional independent checks passed:
+           - Repeated room initialization.
+           - Touching bookings.
+           - Booking deletion.
+           - Booking ID nonreuse.
+           - Out-of-range integer handling.
+
+           An earlier independent verification attempt
+           contained an incorrect function call that
+           omitted the database path argument.
+
+           The verification script was corrected and
+           the independent checks completed successfully.
+           No repository source changes were necessary.
+
+           Reviewed the local Git output:
+           Locked tests and protected files unchanged.
+
+           Reviewed local layer checker output:
+           Four expected L4 violations only.
+
+           Reviewed local pytest output:
+           0 passed, 9 failed, 241 errors in 2.20s.
+           All reported missing app.main.
+
+evidence:  evidence/06-task1-repository.md;
+           prompts/06-task1-review.txt;
+           app/repository.py;
+           docs/plan.md, Task 1;
+           decisions D2, D5 and D6;
+           independent eight-thread concurrency experiment;
+ 
+
+risk:      The independent repository checks do not
+           establish complete API-level correctness.
+
+           Service-level validation and HTTP error
+           translation remain unimplemented.
+
+           Concurrent requests through the HTTP interface,
+           database isolation and restart behavior must
+           still pass the locked acceptance tests.
+ 
