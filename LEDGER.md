@@ -187,6 +187,12 @@ prompts:   Asked the test-writer subagent to generate
 
            prompts/04-acceptance-test-corrections.txt
 
+	   Tested acceptance test permission enforcement
+           by requesting a change to an expected status
+           code from 201 to 418.
+
+           prompts/04-permission-denial-test.txt
+
 review:    The initial test-writer session generated
            245 acceptance test cases covering R1-R10.
 
@@ -281,6 +287,15 @@ checks:    git status --short:
            git diff --check:
            No output. Staged files will be checked
            separately before committing.
+	   Permission enforcement demonstration:
+
+           The Edit operation on
+           tests/acceptance/test_r03_request_shape.py
+           was blocked by the configured deny rule.
+
+           Repository comparison against
+           a5-tests-locked confirmed that no locked
+           acceptance test files were modified.
 
 evidence:  docs/spec.md, rules R1-R10;
            decisions D1-D8;
@@ -289,6 +304,10 @@ evidence:  docs/spec.md, rules R1-R10;
            evidence/04-acceptance-test-audit.md;
            prompts/04-acceptance-tests.txt;
            prompts/04-acceptance-test-corrections.txt.
+	   evidence/permission-denied.md;
+           prompts/04-permission-denial-test.txt;
+           .claude/settings.json;
+           commit eac243b, tag a5-tests-locked.
 
 risk:      The acceptance tests have not yet been
            executed successfully against a completed
@@ -315,8 +334,10 @@ risk:      The acceptance tests have not yet been
            The acceptance tests were committed and
            tagged as a5-tests-locked at commit eac243b.
 
-           Actual tool-level permission enforcement
-           remains to be demonstrated.
+           Actual tool-level permission enforcement was successfully 
+	   demonstrated. Claude Code's Edit operation was blocked by the configured deny rule.
+
+	   The locked acceptance test files remain unchanged. Evidence is recorded in evidence/permission-denied.md.
 
 
 
@@ -407,8 +428,12 @@ risk:      Acceptance tests have not yet passed against
            Booking snapshots cover relevant test dates
            rather than every possible database date.
 
-           Actual tool-level permission enforcement
-           remains to be demonstrated.
+           Actual tool-level permission enforcement was
+	   successfully demonstrated. Claude Code's Edit
+	   operation was blocked by the configured deny rule.
+
+	   The locked acceptance test files remain unchanged.
+	   Evidence is recorded in evidence/permission-denied.md.
 
 
 

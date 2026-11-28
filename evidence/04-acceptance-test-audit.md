@@ -594,7 +594,7 @@ verified separately.
 - [x] Acceptance test commit created.
 - [x] a5-tests-locked tag created.
 - [x] Commit and tag pushed to GitHub.
-- [ ] Actual tool-level permission denial demonstrated.
+- [x] Actual tool-level permission denial demonstrated.
 
 ### Permission rule
 
@@ -615,13 +615,25 @@ reported that it would never match.
 The remote tag and main branch were verified to point
 to the same commit at the time of review.
 
-The actual effectiveness of the permission rule must
-still be demonstrated through a denied Edit operation.
+### Permission enforcement result
 
-The permission denial evidence will be recorded in:
+The configured permission rule was successfully
+demonstrated through an actual denied Edit operation.
 
-evidence/permission-denied.md
+Claude Code attempted to change an expected HTTP
+status code from 201 to 418 in:
 
-No existing acceptance test file may be modified after
-the tagged commit.
+tests/acceptance/test_r03_request_shape.py
 
+The permission system blocked the operation.
+
+The original prompt and denial response are recorded in:
+
+- prompts/04-permission-denial-test.txt
+- evidence/permission-denied.md
+
+Repository comparison against a5-tests-locked
+confirmed that no locked acceptance test files
+were modified.
+
+Part 4 is complete.
