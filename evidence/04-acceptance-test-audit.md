@@ -8,7 +8,7 @@
 - Tool version: 2.1.332
 - Model: Opus 5.5
 - Agent: Main agent and test-writer subagent
-- Prompt: prompts/04-acceptance-tests.txt
+- Prompt: prompts/04-acceptance-tests.txt, prompts/04-acceptance-test-corrections.txt, prompts/04-acceptance-test-review.txt
 - Subagent task: Write acceptance tests R1-R10
 - Reported subagent execution time: 3 minutes 41 seconds
 - Acceptance test cases generated: 245
@@ -581,15 +581,47 @@ verified separately.
 - Booking snapshots cover relevant test dates, not every possible date.
 - Passing behavior against a completed backend has not yet been demonstrated.
 
+
 ## 10. Permission lock and completion status
 
 - [x] Initial generation and correction reports preserved.
 - [x] F1-F8 corrections reviewed.
-- [x] Local checker passed; 250 cases collected, zero passed.
-- [ ] Final owner approval and ledger entries confirmed.
-- [ ] Acceptance test deny rule configured and verified.
-- [ ] `Acceptance tests locked` commit created.
-- [ ] `a5-tests-locked` tag created.
-- [ ] Actual tool-level permission denial demonstrated in `evidence/permission-denied.md`.
+- [x] Local checker passed.
+- [x] 250 acceptance test cases collected.
+- [x] Zero acceptance tests passed before implementation.
+- [x] Ledger entries recorded.
+- [x] Acceptance test deny rule configured.
+- [x] Acceptance test commit created.
+- [x] a5-tests-locked tag created.
+- [x] Commit and tag pushed to GitHub.
+- [ ] Actual tool-level permission denial demonstrated.
 
-The suite is ready for locking, subject to owner approval. No lock commit, tag or permission denial is claimed in this audit.
+### Permission rule
+
+The following deny rule is configured in
+.claude/settings.json:
+
+`Edit(/tests/acceptance/**)`
+
+The redundant Write rule was removed after Claude Code
+reported that it would never match.
+
+### Lock commit
+
+- Commit SHA: eac243b
+- Tag: a5-tests-locked
+- Branch: main
+
+The remote tag and main branch were verified to point
+to the same commit at the time of review.
+
+The actual effectiveness of the permission rule must
+still be demonstrated through a denied Edit operation.
+
+The permission denial evidence will be recorded in:
+
+evidence/permission-denied.md
+
+No existing acceptance test file may be modified after
+the tagged commit.
+

@@ -1,4 +1,10 @@
-##1
+# Part 4 - Acceptance Test Review
+
+Agent: ChatGPT
+Evidence: evidence/04-acceptance-test-audit.md
+
+## Prompt 1 - Initial Acceptance Test Report Review
+
 Review the attached Claude Code response describing
 the initial acceptance test generation session.
 
@@ -25,8 +31,7 @@ Recommend the next steps before locking the acceptance
 tests and update the acceptance test audit accordingly.
 
 
-
-##2
+## Prompt 2 - Acceptance Test Correction Report Review
 
 Review the attached Claude Code correction response
 addressing findings F1-F8 from the initial acceptance
