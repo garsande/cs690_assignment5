@@ -1,0 +1,60 @@
+
+Do Task 2 of docs/plan.md and nothing else. Follow
+AGENTS.md. When you finish, run python tools/check_layers.py
+and python -m pytest tests/acceptance, and report the
+results. Do not edit any test.
+
+## Prompt 2
+
+
+Independent review of Task 2 identified one finding.
+
+F1: app/service.py, parse_textual_int(), lines 60-81.
+
+The fallback currently runs whenever int() raises
+ValueError. Python's regex \s and str.strip() accept
+some control characters that int() rejects.
+
+For example:
+
+int("\x1c1") raises ValueError, but the current
+parse_textual_int("\x1c1") returns 1.
+
+int("1\x1f") raises ValueError, but the current
+parse_textual_int("1\x1f") returns 1.
+
+Correct the parser so that the fallback handles
+integer conversion length limits without accepting
+invalid textual integers.
+
+Preserve the approved IC1 and IC2 behavior.
+
+Verify the following:
+
+- "\x1c1" returns INVALID.
+- "1\x1f" returns INVALID.
+- Valid signs, whitespace, underscores and Unicode
+  decimal digits retain Python int() semantics.
+- 5000 leading zeros followed by 1 returns 1.
+- 5000 nonzero digits return OUT_OF_RANGE.
+- Over-limit underscored integers with leading
+  zeros are normalized correctly.
+- Invalid over-limit integer syntax returns INVALID.
+- Python's global integer conversion limit is unchanged.
+- Rejected service calls leave the database unchanged.
+
+Rerun the original Task 2 smoke checks and the new
+regression checks.
+
+Run python tools/check_layers.py and
+python -m pytest tests/acceptance.
+
+Report the actual results.
+
+Modify only app/service.py. Do not modify models.py,
+repository.py, docs/spec.md, docs/plan.md, frontend/
+or any locked acceptance test.
+
+Do not implement Task 3 or commit any changes.
+
+Stop for human review.

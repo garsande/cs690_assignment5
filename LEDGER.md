@@ -852,4 +852,238 @@ risk:      The independent repository checks do not
            Concurrent requests through the HTTP interface,
            database isolation and restart behavior must
            still pass the locked acceptance tests.
- 
+
+## Entry 5: Part 6 — Task 2: Models and service implementation
+
+artifact:  app/models.py;
+           app/service.py;
+           evidence/06-task2-service.md
+
+tool:      Claude Code, 2.1.332, Opus 5.5,
+           2026-11-28, main agent
+
+prompts:   prompts/06-task2-service.txt
+
+review:    Claude implemented Task 2 of docs/plan.md by
+           creating app/models.py and app/service.py.
+
+           I reviewed the implementation with independent
+           AI assistance.
+
+           The models module defines a frozen NewBooking
+           dataclass containing the five required booking
+           fields.
+
+           The service module implements rules R1-R9
+           without introducing SQL or HTTP handling.
+
+           I confirmed that booking validation follows
+           the required R9 precedence:
+
+           R3 -> R4 -> R5 -> R6 -> R7.
+
+           The implementation preserves strict JSON
+           integer validation under D1, integer range
+           handling under D2, name normalization under
+           D3 and GET validation precedence under D4.
+
+           Independent review identified one finding:
+
+           F1: The textual integer parsing fallback
+           accepted certain control characters that
+           Python int() rejects.
+
+           I requested a localized correction to
+           parse_textual_int() while preserving the
+           approved IC1 and IC2 implementation choices.
+
+           Claude corrected the fallback by using int()
+           to validate a shortened probe containing the
+           distinct whitespace and digit characters.
+
+           The correction preserves valid Unicode digits,
+           signs, underscores and long leading-zero
+           identifiers without changing Python's global
+           integer conversion limit.
+
+           I reviewed and accepted the corrected
+           implementation.
+
+           No additional business rules, API error codes
+           or external dependencies were introduced.
+
+           Claude stopped after Task 2 without implementing
+           Task 3 or committing changes.
+
+checks:    Claude Task 2 smoke checks:
+           All 77 original checks passed again.
+
+           F1 regression checks:
+           All 58 checks passed.
+
+           Claude reported zero mismatches in its
+           exhaustive Unicode character comparison.
+
+           Rejected service calls left the database
+           unchanged.
+
+           Python integer conversion limit:
+           4300 before and after verification.
+
+           Claude python -m pytest:
+           0 passed, 9 failed, 241 errors.
+
+          
+           Local python3 tools/check_layers.py:
+           Layer check FAILED:
+             L4: app/main.py is missing
+             L4: app/routes.py is missing
+
+           The ledger whitespace warning must be resolved
+           before committing.
+
+evidence:  app/models.py;
+           app/service.py;
+           docs/plan.md, Task 2;
+           evidence/06-task2-service.md;
+           prompts/06-task2-service.txt;
+           rules R1-R9;
+           decisions D1-D4;
+           implementation choices IC1 and IC2;
+           F1 correction and regression checks;
+           layer rules L1-L5;
+           a5-tests-locked (250 acceptance tests).
+
+risk:      Service-level smoke checks passed, but HTTP
+           integration remains unimplemented.
+
+           Task 3 must correctly decode JSON requests,
+           translate RuleViolation into the specified
+           HTTP status and error response, and implement
+           the application factory and static file routes.
+
+           API-level concurrency, persistence and
+           database isolation must still be verified
+           through the locked acceptance tests.
+
+           The two L4 violations and 250 unsuccessful
+           acceptance tests are expected because the
+           remaining backend modules do not yet exist.
+
+           The daily booking limit remains intentionally
+           excluded until Part 8.
+
+ ## Entry 5A: Review
+
+artifact:  app/models.py (reviewed);
+           app/service.py (reviewed);
+           evidence/06-task2-service.md;
+           prompts/06-task2-review.txt
+
+tool:      ChatGPT, GPT-6.2,
+           2026-11-28, independent AI reviewer
+
+prompts:   prompts/06-task2-review.txt
+
+
+review:    Reviewed Claude's
+           Task 2 implementation against the approved
+           plan, specification and backend rules.
+
+           The review confirmed that the models module
+           contains the required request data shape and
+           that the service contains business logic
+           without SQL or HTTP dependencies.
+
+           Reviewed request validation, calendar
+           dates, booking names, time restrictions,
+           room existence, overlap handling, cancellation
+           and error precedence.
+
+           The review confirmed that strict POST integer
+           validation rejects Boolean, floating-point
+           and string room identifiers.
+
+           Independent execution identified one finding:
+
+           F1: The textual integer parser accepted
+           certain control characters that Python int()
+           rejects.
+
+           The original parser returned integer 1 for
+           "\x1c1" and "1\x1f", although Python int()
+           raises ValueError for both inputs.
+
+           I submitted the correction prompt to Claude.
+
+           Claude revised the integer parser to validate
+           a shortened probe using Python int() before
+           normalizing long integer strings.
+
+           Reviewed the revised source and
+           independently verified the corrected behavior.
+
+           F1 was resolved, and no additional blocking
+           findings were identified.
+
+checks:    Independently inspected the original uploaded
+           app/models.py and app/service.py files.
+
+           Independent service checks confirmed:
+           - Four rooms initialized.
+           - Valid booking creation.
+           - Name trimming.
+           - Strict Boolean room ID rejection.
+           - Invalid calendar date rejection.
+           - R3 before R4 precedence.
+           - R4 before R5 precedence.
+           - R5 before R6 precedence.
+           - Out-of-range room rejection.
+           - Overlap rejection.
+           - Unchanged booking state after six
+             rejected calls.
+           - Long integer normalization.
+           - Cancellation using a long identifier.
+
+           Independently reproduced F1 using the
+           original textual integer parser.
+
+           Reviewed the revised app/service.py file.
+
+           Reviewed Claude's reported results:
+           77 original smoke checks passed.
+           58 F1 regression checks passed.
+
+           Reviewed the local Git output:
+           Repository, locked tests, frontend,
+           specification, plan and AGENTS.md unchanged.
+
+           Reviewed local pytest output:
+           0 passed, 9 failed, 241 errors in 1.73s.
+
+evidence:  evidence/06-task2-service.md;
+           prompts/06-task2-review.txt;
+           app/models.py;
+           app/service.py;
+           docs/plan.md, Task 2;
+           rules R1-R9;
+           decisions D1-D4;
+           implementation choices IC1 and IC2;
+           F1 independent reproduction;
+           12 independent parser regression checks;
+           user-provided local verification transcript.
+
+risk:      Independent service-level verification does
+           not establish complete API-level correctness.
+
+           The independent execution environment used
+           Python 3.13.5, while the local project uses
+           Python 3.12.
+
+           Claude's exhaustive Unicode comparison was
+           reviewed as reported evidence but was not
+           independently repeated by ChatGPT.
+
+           HTTP error translation, JSON decoding,
+           concurrency, persistence and database
+           isolation require Task 3 verification.

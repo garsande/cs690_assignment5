@@ -1,0 +1,3 @@
+1. Review the Task 2 Claude response and models.py/service.py against the approved plan and specification. Independently check service behavior and identify defects.
+2. Review the F1 correction response and revised service.py, verify parser regressions and advise whether further corrections are needed.
+
