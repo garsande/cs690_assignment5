@@ -435,5 +435,201 @@ risk:      Acceptance tests have not yet passed against
 	   The locked acceptance test files remain unchanged.
 	   Evidence is recorded in evidence/permission-denied.md.
 
+## Entry 3: Backend planning
 
+artifact:  docs/plan.md;
+           evidence/05-plan-review.md
 
+tool:      Claude Code, 2.1.332, Opus 5.5,
+           2026-11-28, main agent, plan mode
+
+prompts:   prompts/05-backend-plan.txt
+
+review:    Claude prepared a backend implementation plan
+           covering rules R1-R10 in three tasks:
+
+           Task 1: app/repository.py
+           Task 2: app/models.py and app/service.py
+           Task 3: app/routes.py and app/main.py
+
+           Claude identified an ambiguity concerning textual
+           integer parameters in GET and DELETE requests.
+           I selected Python int() parsing semantics without
+           introducing a new business requirement.
+
+           With independent ChatGPT assistance, Reviewed
+           the original and revised plans and requested
+           corrections addressing eight findings (F1-F8):
+
+           F1: Expected layer checker failures.
+           F2: Mandatory browser verification.
+           F3: Subagent review sequencing.
+           F4: Strict JSON parsing.
+           F5: Python integer conversion limits.
+           F6: Automatically generated FastAPI endpoints.
+           F7: Smoke-check evidence and reporting.
+           F8: Application factory signature.
+
+           I accepted four implementation choices:
+
+           IC1: Python int() semantics for textual identifiers.
+           IC2: Handle integer conversion limits without
+                changing Python's global safety settings.
+           IC3: Reject nonstandard JSON constants.
+           IC4: Disable automatically generated API
+                documentation endpoints.
+
+           Additional corrections addressed leading zeros
+           in long integer strings, stronger JSON verification,
+           screenshot timing, disposable database protection
+           and accurate pytest result reporting.
+
+           The final plan preserves rules R1-R10, decisions
+           D1-D8, product owner decisions P1-P4 and all
+           250 locked acceptance tests.
+
+           Claude saved the corrected plan to docs/plan.md
+           without implementing backend code.
+
+checks:    git status --short:
+           Four expected Part 5 documentation files listed.
+
+           git diff -- app/ frontend/ tests/ docs/spec.md AGENTS.md:
+           No output; no tracked changes to protected files
+           or backend implementation.
+
+           git diff a5-tests-locked -- tests/acceptance/:
+           No output; locked acceptance tests unchanged.
+
+           grep -n "^## " docs/plan.md:
+           All four required headings present:
+           Task 1, Task 2, Task 3 and Not in this change.
+
+           git diff --check:
+           No output; no whitespace errors reported for
+           tracked changes. Untracked files require a
+           staged whitespace check before committing.
+
+           No backend implementation or acceptance test
+           execution was performed during planning.
+
+evidence:  docs/plan.md;
+           evidence/05-plan-review.md;
+           prompts/05-backend-plan.txt;
+           rules R1-R10;
+           decisions D1-D8;
+           implementation choices IC1-IC4;
+           layer rules L1-L5;
+           a5-tests-locked (250 acceptance tests).
+
+risk:      The approved plan has not yet been implemented
+           or tested.
+
+           Strict input validation, concurrent booking
+           protection, transaction handling and integer
+           parsing require careful implementation.
+
+           Rare Unicode parsing differences and HTTP
+           server limits for extremely long requests
+           remain documented limitations.
+
+           Tasks 1 and 2 are expected to have zero passing
+           acceptance tests because app.main does not
+           yet exist.
+
+           All 250 acceptance tests and layer checks are
+           expected to pass after Task 3. These are planned
+           outcomes, not actual test results.
+
+           The daily booking limit remains intentionally
+           excluded until the formal Part 8 specification
+           change.
+
+## Entry 3A: Review Backend plan 
+
+artifact:  evidence/05-plan-review.md;
+           prompts/05-plan-review.txt;
+           docs/plan.md (reviewed)
+
+tool:      ChatGPT, GPT-6.2,
+           2026-11-28, independent AI reviewer
+
+prompts:   prompts/05-plan-review.txt
+
+           Consolidated reconstructed descriptions of
+           the planning review requests, rather than
+           verbatim prompt transcripts.
+
+review:    Reviewed Claude's original
+           and revised backend plans against the assignment
+           handout, specification, architectural rules and
+           locked acceptance test constraints.
+
+           Identified eight findings (F1-F8)
+           concerning layer checker expectations, browser
+           verification, subagent sequencing, JSON parsing,
+           integer conversion limits, automatic endpoints,
+           smoke-check reporting and the factory signature.
+
+           I reviewed these findings and submitted the
+           correction prompts to Claude.
+
+           A second review identified additional corrections:
+
+           - Normalize leading zeros, underscores, signs
+             and Unicode digits in long integer strings.
+           - Verify strict JSON parsing using otherwise
+             valid booking requests.
+           - Capture the browser screenshot while a booking
+             remains visible.
+           - Protect existing databases from deletion.
+           - Report actual pytest failure and error counts.
+
+           Reviewed the final docs/plan.md and
+           confirmed that all eight findings and subsequent
+           corrections were addressed at the planning level.
+
+           The existing backend plan and consolidated
+           Claude prompt file were preserved unchanged.
+
+checks:    Reviewed docs/spec.md and tools/check_layers.py
+           through the GitHub repository.
+
+           Reviewed Claude's original and revised plans
+           against the Part 5 assignment requirements.
+
+           Reviewed the final docs/plan.md:
+           All three implementation tasks and the required
+           Not in this change section were present.
+
+           Reviewed Git verification output:
+           No tracked backend, frontend, specification
+           or locked acceptance test changes reported.
+
+           Reviewed the four files in the supplied
+           Part 5 documentation archive.
+
+           Confirmed that the reviewed documentation
+           archive preserved docs/plan.md and
+           prompts/05-backend-plan.txt unchanged.
+
+           No backend code was executed and no GitHub
+           repository files were modified
+
+evidence:  evidence/05-plan-review.md;
+           prompts/05-plan-review.txt;
+           docs/plan.md;
+           review findings F1-F8;
+           implementation choices IC1-IC4;
+           final plan review and approval recommendation.
+
+risk:      The independent review establishes planning-level
+           compliance, not implementation correctness.
+
+           Acceptance test compatibility, concurrency
+           behavior, transaction safety and input validation
+           remain to be verified during Part 6.
+
+           The original Claude plan is summarized in the
+           evidence file. The supplied revised Claude
+           response is preserved verbatim.

@@ -1,0 +1,11 @@
+# Part 5 — Review input
+
+## Review 1
+Review the original Claude backend plan against Part 5, the specification, AGENTS.md, layer checker and locked acceptance tests. Identify corrections before implementation.
+
+## Review 2
+Review the revised Claude plan against F1–F8 and identify any remaining technical or verification issues.
+
+## Review 3
+Review the saved docs/plan.md and the user-supplied local Git verification output. Confirm the final corrections and required headings without implementing code.
+

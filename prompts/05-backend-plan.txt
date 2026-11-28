@@ -1,0 +1,166 @@
+## Prompt 1 
+
+Plan the backend for docs/spec.md, rules R1 to R10, in three tasks: Task 1,
+app/repository.py; Task 2, app/models.py and app/service.py; Task 3,
+app/routes.py and app/main.py. For each task, list the files it creates and what
+"done" means, including which acceptance tests should pass after it. End with a
+section called "Not in this change". The tests in tests/acceptance/ must pass
+without being edited, and nothing in frontend/ changes.
+
+
+## Prompt 2 - Textual Integer Parsing Clarification
+
+Claude requested clarification on integer string parsing
+for GET room_id and DELETE id parameters.
+
+Selected option: 4 - Custom response.
+
+Use Python int() for textual GET room_id and DELETE id
+parameters. Return 422 invalid_request when integer
+conversion fails.
+
+Apply D2 for integer values outside SQLite's supported
+integer range, returning the applicable 404 error.
+
+Keep strict JSON integer validation under D1 for POST
+requests.
+
+Treat textual integer parsing as an implementation
+choice for an unresolved ambiguity, not a new business
+requirement.
+
+Do not modify docs/spec.md, the locked acceptance tests,
+or the existing API contract. Record this implementation
+choice in docs/plan.md.
+
+## Prompt 3 - Corrections
+
+
+Review and revise the proposed backend plan using the
+following findings. Retain the existing architecture,
+three-task structure and approved implementation choices.
+
+F1. Correct Task 1's expected layer checker output.
+After Task 1, main.py, routes.py, service.py and models.py
+are all missing. After Task 2, only main.py and routes.py
+should be missing.
+
+F2. Browser verification is mandatory under Part 6,
+not optional. After Task 3, include creating a booking,
+attempting an overlapping booking, cancelling a booking,
+and capturing evidence/page.png.
+
+F3. Reserve the formal reviewer and contract-checker
+subagent execution for Part 7.
+
+F4. Ensure JSON parsing complies with R3. Python's
+json.loads accepts nonstandard constants such as NaN
+and Infinity by default. Reject invalid JSON with
+422 invalid_request, including invalid constants in
+otherwise ignored extra fields.
+
+F5. Consider Python 3.12's integer string conversion
+limit when applying D2. Preserve the approved Python
+int() textual parsing choice and avoid globally
+disabling Python's integer conversion safety limit.
+Document any remaining limitation.
+
+F6. Disable FastAPI's automatically generated docs,
+redoc and OpenAPI endpoints to avoid introducing
+additional application endpoints under D8.
+
+F7. Report the actual smoke-check results for Tasks 1
+and 2 so they can be recorded in the ledger and
+committed evidence. Do not commit temporary smoke
+scripts or reference temporary file paths in the ledger.
+
+F8. Preserve the application factory signature defined
+in section 3 of docs/spec.md:
+
+create_app(db_path: str = "roombook.db")
+
+Use the exact required Markdown headings:
+
+## Task 1
+## Task 2
+## Task 3
+## Not in this change
+
+Retain the Implementation choices section, including
+the approved textual integer parsing decision.
+
+Do not modify docs/spec.md, AGENTS.md, frontend/,
+locked acceptance tests, or existing API contracts.
+
+Do not implement any backend code.
+
+Return the revised plan for human review and stop.
+
+## Prompt 4 - Plan approval
+
+
+The revised backend plan is approved subject to the
+following final corrections.
+
+F5 follow-up:
+Correct IC2's assumption that every integer string
+exceeding Python's conversion limit is outside the
+SQLite integer range.
+
+Textual integers may contain leading zeros, underscores,
+signs and Unicode decimal digits. Normalize these
+appropriately before determining the numeric range.
+For example, a long string of leading zeros followed
+by 1 represents the valid integer 1.
+
+Preserve the approved Python int() parsing semantics
+and do not change Python's global conversion limit.
+
+F4 verification follow-up:
+For the strict JSON spot check, use an otherwise valid
+booking request containing all five required fields
+and an extra field with NaN or Infinity.
+
+Verify 422 invalid_request and unchanged booking state.
+A body containing only {"x": NaN} is insufficient
+because it also fails required-field validation.
+
+F2 follow-up:
+Capture evidence/page.png while at least one booking
+is visible on the frontend. Complete the overlap
+and cancellation checks as required by Part 6.
+
+Do not automatically delete an existing database.
+Only clean up a disposable database created for
+verification, with human approval.
+
+Additional verification requirements:
+- Report actual pytest pass, failure and error counts.
+- Do not assume every missing-app result is an error;
+  some tests may be reported as failures.
+- Run python -m pytest tests/acceptance explicitly,
+  as required by Part 6.
+- Stop after each implementation task for human review.
+
+Retain the approved three-task architecture and
+implementation choices IC1-IC4, subject to the
+corrections above.
+
+Use these exact Markdown headings:
+
+## Task 1
+## Task 2
+## Task 3
+## Not in this change
+
+Save the corrected and approved plan to docs/plan.md.
+
+Only write docs/plan.md.
+
+Do not implement backend code, modify the specification,
+edit locked tests, change frontend files, or commit.
+
+Stop after saving the plan and report the changes.
+
+
+
